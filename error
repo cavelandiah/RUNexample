@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "MIRfix.py", line 3807, in sublist
+    coortemp2=int(mat1seq.index(curmatstar))
+ValueError: substring not found
+*** tb_lineno: 3807
+*** Family: test10

@@ -1,0 +1,11 @@
+test10 let-7 MI0000060 hsa-let-7a-1 MIMAT0000062 MIMAT0004481 6..27 57..77 hsa-let-7a-5p hsa-let-7a-3p
+test10 let-7 MI0000061 hsa-let-7a-2 MIMAT0000062 MIMAT0010195 5..26 50..71 hsa-let-7a-5p hsa-let-7a-2-3p
+test10 let-7 MI0000062 hsa-let-7a-3 MIMAT0000062 MIMAT0004481 4..25 52..72 hsa-let-7a-5p hsa-let-7a-3p
+test10 let-7 MI0007149 cin-let-7a-1 MIMAT0006086 MIMAT0015247 17..37 78..98 cin-let-7a-5p cin-let-7a-1-3p
+test10 let-7 MI0007150 cin-let-7a-2 MIMAT0006086 MIMAT0015248 17..37 71..91 cin-let-7a-5p cin-let-7a-2-3p
+test10 let-7 MI0007151 cin-let-7b MIMAT0006087 MIMAT0015249 16..37 63..84 cin-let-7b-5p cin-let-7b-3p
+test10 let-7 MI0007152 cin-let-7c MIMAT0006088 16..37 cin-let-7c
+test10 let-7 MI0007153 cin-let-7d MIMAT0006089 MIMAT0015250 16..37 56..74 cin-let-7d-5p cin-let-7d-3p
+test10 let-7 MI0007154 cin-let-7e MIMAT0006090 16..37 cin-let-7e
+
+test10 RF00027-226 F1564493671 dive-RF00027-226 MIMAT0006086/F1564493671 5..25 dive-RF00027-226-mat
