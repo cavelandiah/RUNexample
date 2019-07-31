@@ -1,1 +1,1 @@
-/home/bioinf/workspace/MIRfix_V2/RUNexample/genomes/Didemnum_vexillum.fa
+/homes/biertank/cristian/workspace/MIRfix_V2/RUNexample/genomes/Didemnum_vexillum.fa

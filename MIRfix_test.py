@@ -22,10 +22,10 @@ from matplotlib.backends.backend_pdf import PdfPages
 import json
 import gzip
 import multiprocessing, logging
+import importlib ##CAVH
 import traceback as tb
 from distutils.spawn import find_executable
 import RNA
-
 
 def getindex(sequence,specie,precID,precdesc,listnogenomes,listnotingenome,templong):#get the index of the original sequence in its genome
     try:

@@ -21,11 +21,14 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 import json
 import gzip
+import importlib
 import multiprocessing, logging
 import traceback as tb
 from distutils.spawn import find_executable
+sys.path.append('/home/bioinf/ViennaRNA/lib64/python2.7/site-packages')
+#sys.path.append('/home/bioinf/clustalw-2.1-linux-x86_64')
+#sys.path.append('/home/bioinf/dialign_package/src')
 import RNA
-
 
 def getindex(sequence,specie,precID,precdesc,listnogenomes,listnotingenome,templong):#get the index of the original sequence in its genome
     try:
@@ -235,7 +238,7 @@ def flip(filename,filen,outdir,mappingfile,matfile,listofnew,listofnewloop,listo
                         printlog(["mat is here",matID])
                         mtf = openfile(matfile)
                         for mat in SeqIO.parse(mtf, "fasta"):#get the corresponding mature sequence and get position
-                            if matID in str(mat.description):
+                            if matID in str(mat.description) and len(matID)==len(mat.description.split()[1]): #CAVH TODO add len comparison
                                 printlog(["mat is here1",matID])
                                 matdesc=mat.description
                                 flagmat=1
@@ -1183,13 +1186,13 @@ def readfold(listnewold,filename,oldlstlstr,oldlstlstl,spos,epos,newspos,newepos
 
                     done=True
 
-                if done:
+                if done: #Aca puede estar mal, TODO!
                     if oldbroken and newbroken:
                         printlog("remove old and no new")
                         listofboth.append(precid)
                         listofboth.append(oldprecseq)
                     elif (not oldbroken and not oldloop and oldparts==1) and ((oldscore<=newscore) or (newbroken)):
-                        printlog("old is Better1")
+                        printlog("old is Better1 or equal") #CAVH
                         mirstar,mirstarspos,mirstarepos,mirorien=getmirstar(spos,epos,matseq,oldlstlstl,oldlstlstr,oldprecseq,oldhairpstart,oldhairpend)
                         if mirstarspos!=-1 and mirstarepos!=-1:
                             printlog([mirstar,mirstarspos,mirstarepos])
@@ -2506,7 +2509,7 @@ def checknomat(precfile,mapfile,matfile,directory,precfilename,listremovedbroken
             precID=record.id
             precseq=record.seq
             flag=0
-            mf = openfile(mapfile)
+            mf = openfile(mapfile) #Open the mapping file
             for line in mf:
                 item=line.split()
                 if precID in line:#and not 2 mat
@@ -2552,7 +2555,7 @@ def checknomat(precfile,mapfile,matfile,directory,precfilename,listremovedbroken
                     temptoalign.close()
                     infile=directory+'temptoalign.fa'
                     outfile=directory+'temptoalign.aln'
-                    cline = ClustalwCommandline("clustalw", infile=infile, outfile=outfile)
+                    cline = ClustalwCommandline("clustalw2", infile=infile, outfile=outfile)
 
                     stdout,stder=cline()
                     fi=open(directory+'temptoalign.txt','w')
@@ -2588,7 +2591,7 @@ def checknomat(precfile,mapfile,matfile,directory,precfilename,listremovedbroken
                     tempoutfilepredict=directory+'temptopredict.aln'
                     temptopredictfa.write(">"+matpredictID+"\n"+matpredictseq+"\n"+">"+prec.description+"\n"+str(prec.seq))
                     temptopredictfa.close()
-                    predictcline = ClustalwCommandline("clustalw", infile=tempinfilepredict, outfile=tempoutfilepredict)
+                    predictcline = ClustalwCommandline("clustalw2", infile=tempinfilepredict, outfile=tempoutfilepredict)
                     predictcline()
 
                     matId=matpredictid
@@ -3493,7 +3496,7 @@ def sublist(filename):
         outfile=""
         infile=filen[:]
         outfile=outdir+filename.strip()+"-tempshan.aln"
-        clustaline = ClustalwCommandline("clustalw", infile=infile, outfile=outfile)
+        clustaline = ClustalwCommandline("clustalw2", infile=infile, outfile=outfile)
         stdoutshan,stdershan=clustaline()
         alignTostock(outfile)
         OldShanon=CalShanon(outfile+'.stk')
@@ -3678,7 +3681,7 @@ def sublist(filename):
                                 fspos=0
                             elif xcutseq>10 and (xcut>50 or xcut<0):
                                 fspos=mspos-10
-                            elif xcutseq<=10 and (xcut50 or xcut<0):
+                            elif xcutseq<=10 and (xcut>50 or xcut<0): #CAVH, please review: xcut50 -> xcut>50
                                 fspos=0
 
                             if ycutseq>=ycut and ycut>=0 and ycut<=50:
@@ -3687,7 +3690,7 @@ def sublist(filename):
                                 fepos=len(pseq)
                             elif ycutseq>10 and (ycut>50 or ycut<0):
                                 fepos=mepos+11
-                            elif ycutseq<=10 and (ycut50 or ycut<0):
+                            elif ycutseq<=10 and (ycut>50 or ycut<0): #CAVH, please review: ycut50 -> ycut>50
                                 fepos=len(pseq)
 
                             #cutpseq=pseq[fspos:fepos]
@@ -3781,14 +3784,14 @@ def sublist(filename):
                     startfinalseq=0
                     endfinalseq=0
                     mtf = openfile(matfile)
-                    for reco in SeqIO.parse(mtf, 'fasta'):
+                    for reco in SeqIO.parse(mtf, 'fasta'): #What happen if fasta does not have mirstar?
                         splitreco=reco.description.split()
 
                         if curmatID == splitreco[1]:
                             curmatseq=str(reco.seq)
                             nstar=True
                             break
-
+                        #I changed the spaces!  identation more
                     mtfs = openfile(outdir+filename.strip()+"-mirstar.fa")
                     for starrec in SeqIO.parse(mtfs,'fasta'):
                         curmatsplit=(starrec.description).split()
@@ -3800,30 +3803,30 @@ def sublist(filename):
                             star=True
                             break
 
-                    coortemp1=int(mat1seq.index(curmatseq))
-                    coortemp2=int(mat1seq.index(curmatstar))
+                        coortemp1=int(mat1seq.index(curmatseq))
+                        coortemp2=int(mat1seq.index(curmatstar))
 
-                    if coortemp2<coortemp1:
-                        tempseqex=curmatseq[:]
-                        curmatseq=curmatstar[:]
-                        curmatstar=tempseqex[:]
+                        if coortemp2<coortemp1:
+                            tempseqex=curmatseq[:]
+                            curmatseq=curmatstar[:]
+                            curmatstar=tempseqex[:]
 
-                    printlog(["no long",coortemp1,coortemp2,curmatseq,curmatstar])
+                        printlog(["no long",coortemp1,coortemp2,curmatseq,curmatstar])
 
-                    startmattemp=int(mat1seq.index(curmatseq))
+                        startmattemp=int(mat1seq.index(curmatseq))
 
-                    if startmattemp<=userflanking:
-                        startmat=startmattemp
-                        startfinalseq=0
-                    elif startmattemp>userflanking:
-                        startmat=userflanking
-                        startfinalseq=startmattemp-(startmat-userflanking)
+                        if startmattemp<=userflanking:
+                            startmat=startmattemp
+                            startfinalseq=0
+                        elif startmattemp>userflanking:
+                            startmat=userflanking
+                            startfinalseq=startmattemp-(startmat-userflanking)
 
-                    endmat=startmat+len(curmatseq)-1
-                    tempseq=mat1seq[startfinalseq:]
+                            endmat=startmat+len(curmatseq)-1
+                            tempseq=mat1seq[startfinalseq:]
 
-                    printlog(["curmat not",mat1seq,curmatseq])#,longseq)
-                    printlog(['coor not',startmat,endmat])
+                            printlog(["curmat not",mat1seq,curmatseq])#,longseq)
+                            printlog(['coor not',startmat,endmat])
 
                     if star:
                         startmatstar=int(tempseq.find(curmatstar))
@@ -4751,7 +4754,7 @@ if __name__ == '__main__':
         md = RNA.md()
         md = None
 
-        find_executable('clustalw') or sys.exit('Please install clustalw to run this')
+        find_executable('clustalw2') or sys.exit('Please install clustalw2 to run this')
         find_executable('dialign2-2') or sys.exit('Please install dialign2-2 to run this')
 
         for fam in lfams:
